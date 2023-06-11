@@ -10,19 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// donot forge to push to the database after changing a model 
 model User {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  image          String?
-  email          String?
-  emailVerified  DateTime?
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  image String?
+  email String? @unique //email must be unique
+  emailVerified DateTime?
   hashedPassword String?
-  craetedAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  favrouriteIds  String[]  @db.ObjectId
-  sessions       Session[]
-  accounts       Account[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions Session[]
+  accounts Account[]
+  favoriteIds String[] @db.ObjectId
 }
+
 
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
@@ -71,3 +73,4 @@ model Movie{
   genre String
   duration String
 }
+  
