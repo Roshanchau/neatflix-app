@@ -1,7 +1,11 @@
 import Input from "@/components/input";
 import { useCallback, useState } from "react";
+import axios from "axios";
+import {signIn} from "next-auth/react";
+import {useRouter} from "next/router";
 
 const Auth = () => {
+  const router=useRouter();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -10,10 +14,39 @@ const Auth = () => {
 
   // setVarient uses a call back function with parameter as currentVarient which is the current varient i.e. login
   const toggleVarient = useCallback(() => {
-    setVarient((curretVarient) =>
-      curretVarient === "login" ? "register" : "login"
+    setVarient((currentVarient) =>
+      currentVarient === "login" ? "register" : "login"
     );
-  }, []);
+  }, []); 
+
+  const login = useCallback (async()=>{
+    try{
+      await signIn("credentials" , {
+        email,
+        password,
+        redirect:false,
+        callbackUrl: "/"
+      });
+      router.push("/");
+    }catch(error){
+      console.log(error);
+    }
+  } , [email, password , router])
+
+  const register=useCallback(async()=>{
+    try{
+      await axios.post("/api/register",{
+        email,
+        name, 
+        password
+      });
+
+      login();
+    }catch(error){
+      console.log(error);
+    }
+  },[email, name , password])
+
 
   return (
     <div className="relative h-screen w-screen bg-[url('../public/images/hero.jpg')] bg-no-reapeat bg-center bg-fixed bg-cover">
@@ -58,7 +91,7 @@ const Auth = () => {
                 value={password}
               />
 
-              <button className="bg-red-600 rounded-md py-3 text-white w-full mt-10 hover:bg-red-700 transition">
+              <button onClick={varient==="login"? login : register} className="bg-red-600 rounded-md py-3 text-white w-full mt-10 hover:bg-red-700 transition">
                 {varient === "login" ? "login" : "Sign up"}
               </button>
               <p className="text-neutral-500 mt-12">
