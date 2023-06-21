@@ -1,57 +1,50 @@
 import Input from "@/components/input";
 import { useCallback, useState } from "react";
 import axios from "axios";
-import {signIn} from "next-auth/react";
-import {useRouter} from "next/router";
+import { signIn } from "next-auth/react";
 
-import {FcGoogle} from "react-icons/fc";
-import {FaGithub} from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
-  
 const Auth = () => {
-  const router=useRouter();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
   const [varient, setVarient] = useState("login");
 
-
   // setVarient uses a call back function with parameter as currentVarient which is the current varient i.e. login
   const toggleVarient = useCallback(() => {
     setVarient((currentVarient) =>
       currentVarient === "login" ? "register" : "login"
     );
-  }, []); 
+  }, []);
 
-  const login = useCallback (async()=>{
-    try{
-      await signIn("credentials" , {
+  const login = useCallback(async () => {
+    try {
+      await signIn("credentials", {
         email,
         password,
-        redirect:false, 
-        callbackUrl: '/'
+        callbackUrl: "/profiles",
       });
-      router.push("/");
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
-  } , [email, password , router])
+  }, [email, password]);
 
-  const register=useCallback(async()=>{
-    try{
-      await axios.post("/api/register",{
+  const register = useCallback(async () => {
+    try {
+      await axios.post("/api/register", {
         email,
-        name, 
-        password
+        name,
+        password,
       });
 
       login();
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
-  },[email, name , password])
-
+  }, [email, name, password]);
 
   return (
     <div className="relative h-screen w-screen bg-[url('../public/images/hero.jpg')] bg-no-reapeat bg-center bg-fixed bg-cover">
@@ -96,13 +89,16 @@ const Auth = () => {
                 value={password}
               />
 
-              <button onClick={varient==="login"? login : register} className="bg-red-600 rounded-md py-3 text-white w-full mt-10 hover:bg-red-700 transition">
+              <button
+                onClick={varient === "login" ? login : register}
+                className="bg-red-600 rounded-md py-3 text-white w-full mt-10 hover:bg-red-700 transition"
+              >
                 {varient === "login" ? "login" : "Sign up"}
               </button>
               <div className="flex flex-row items-center gap-4 mt-8 justify-center">
                 <div
-                onClick={()=> signIn("google" , {callbackUrl: "/"})}
-                className="
+                  onClick={() => signIn("google", { callbackUrl: "/profiles" })}
+                  className="
                   w-10
                   h-10
                   bg-white
@@ -113,12 +109,13 @@ const Auth = () => {
                   cursor-pointer
                   hover:opacity-80
                   transition
-                ">
-                  <FcGoogle size={30}/>
+                "
+                >
+                  <FcGoogle size={30} />
                 </div>
                 <div
-                onClick={()=> signIn("github" , {callbackUrl: "/"})}
-                className="
+                  onClick={() => signIn("github", { callbackUrl: "/profiles" })}
+                  className="
                   w-10
                   h-10
                   bg-white
@@ -129,8 +126,9 @@ const Auth = () => {
                   cursor-pointer
                   hover:opacity-80
                   transition
-                ">
-                  <FaGithub size={30}/>
+                "
+                >
+                  <FaGithub size={30} />
                 </div>
               </div>
               <p className="text-neutral-500 mt-12">
