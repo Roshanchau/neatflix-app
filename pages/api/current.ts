@@ -7,7 +7,7 @@ export default async function handler(req:NextApiRequest , res: NextApiResponse)
     }
     try{
         // we are not checking for currentUser cuz we have already done it in the serverAuth section.
-        const {currentUser}=await serverAuth(req);
+        const {currentUser}=await serverAuth(req , res);
 
         return res.status(200).json(currentUser);
     }catch(error){

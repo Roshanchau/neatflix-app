@@ -1,11 +1,12 @@
 // protecting client routes and api routes.
-import { NextApiRequest } from "next";
-import { getSession } from "next-auth/react";
+import { NextApiRequest , NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 import prismadb from "@/libs/prismadb";
 
-const serverAuth=async (req: NextApiRequest)=>{
-    const session=await getSession({req}); //req parameter holds the jwt token which the getSession can use to get our logged in users
+const serverAuth=async (req: NextApiRequest , res: NextApiResponse)=>{
+    const session=await getServerSession(req , res , authOptions); //req parameter holds the jwt token which the getSession can use to get our logged in users
 
     if(!session?.user?.email){
         throw Error("Not signed in");

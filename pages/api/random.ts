@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest , res: NextApiResponse
     }
 
     try{
-        await serverAuth(req);
+        await serverAuth(req , res);
 
         const movieCount =await prismadb.movie.count();
         const randomIndex=Math.floor(Math.random()*movieCount);
