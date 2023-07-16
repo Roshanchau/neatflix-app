@@ -44,7 +44,7 @@ const Auth = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [email, name, password]);
+  }, [email, name, password , login]);
 
   return (
     <div className="relative h-screen w-screen bg-[url('../public/images/hero.jpg')] bg-no-reapeat bg-center bg-fixed bg-cover">
